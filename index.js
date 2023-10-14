@@ -13,15 +13,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => {
-        console.log("Connected to MongoDB");
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use("/api/", route);
 app.listen(port, () => {
-    console.log(`Listening to port ${port}`);
+  console.log(`Listening to port ${port}`);
 });
