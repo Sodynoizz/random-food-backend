@@ -1,8 +1,7 @@
 import { Router } from "express";
 import {
   AddFoodToDB,
-  RandomFoodsByTypes,
-  RandomFoodsByPlaces,
+  RandomFoods,
   SearchMenuByName,
   SearchMenuByID,
   SearchMenuByPlace
@@ -15,15 +14,11 @@ const router = Router();
 // @access Private
 router.post("/add-foods", AddFoodToDB);
 
-// @desc Add foods to database by type
-// @route POST /random-foods-by-type
-// @access Public
-router.post("/random-foods-by-types", RandomFoodsByTypes);
 
-// @desc Add foods to database by type
-// @route POST /random-foods-by-type
+// @desc Add foods to database
+// @route POST /random-foods
 // @access Public
-router.post("/random-foods-by-places", RandomFoodsByPlaces);
+router.post("/random-foods", RandomFoods);
 
 // @desc Search for menu by name
 // @route POST /search-menu-by-name

@@ -3,45 +3,26 @@ import path from "path";
 import FoodModel from "../models/foodModel.js";
 import { getRandomNumber } from "../utils/utils.js";
 
-const getRandomFood = async (filter) => {
+export const RandomFoods = async (req, res) => {
+  const { foodtype, place } = req.body;
+
   try {
-    const modelCounts = await FoodModel.countDocuments(filter);
-    const randomIndex = getRandomNumber(1, modelCounts + 1);
-    return await FoodModel.findOne(filter).skip(randomIndex - 1);
-  } catch (err) {
-    console.error(`Error: ${err}`);
-    throw new Error("Internal Server Error");
-  }
-};
+    let filter = {};
+    if (foodtype !== "all") filter.foodtype = foodtype;
+    if (place !== "all") filter.place = place;
 
-export const RandomFoodsByTypes = async (req, res) => {
-  const { foodtype } = req.body;
-  try {
-    const filter = foodtype === "all" ? {} : { foodtype };
-    const randomFood = await getRandomFood(filter);
+    const foods = await FoodModel.find(filter);
+    if (!foods.length)
+      return res
+        .status(400)
+        .send({ err: `Cannot find foods in ${foodtype} category at ${place}` });
 
-    if (!randomFood) {
-      return res.status(400).send({ err: `Cannot find foods in ${foodtype} category` });
-    }
-
+    const randIdx = getRandomNumber(0, foods.length - 1);
+    const randomFood = foods[randIdx];
     return res.status(200).send(randomFood);
   } catch (err) {
-    return res.status(500).send({ error: err.message });
-  }
-};
-
-export const RandomFoodsByPlaces = async (req, res) => {
-  const { place } = req.body;
-  try {
-    const filter = place === "all" ? {} : { place };
-    const randomFood = await getRandomFood(filter);
-    if (!randomFood) {
-      return res.status(400).send({ err: `Cannot find foods in ${place} category` });
-    }
-
-    return res.status(200).send(randomFood);
-  } catch (err) {
-    return res.status(500).send({ error: err.message });
+    console.error(err);
+    return res.status(500).send({ err: "Internal Server Error" });
   }
 };
 
